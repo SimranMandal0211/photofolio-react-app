@@ -1,0 +1,25 @@
+ *{
+    margin: 0;
+    padding: 0;
+ }
+
+nav{
+    color: #bccaf6;
+    background-image: linear-gradient(to bottom right, rgb(11, 17, 60), rgba(204, 22, 255, 0.84));
+    margin-bottom: 1rem;
+    /* margin: 1rem 0; */
+    height: 5rem;
+    display: flex;
+    align-items: center;
+}
+
+nav img{
+    margin: .5rem 1rem .5rem 2rem;
+    height: 4rem;
+    width: 4rem;
+}
+
+nav span{
+    font-weight: bold;
+    font-size: 2rem;
+}
