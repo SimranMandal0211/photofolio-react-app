@@ -1,5 +1,5 @@
 import Navbar from "./components/Navbar/Navbar";
-import Albumslist from "./components/Albumlist";
+import Albumslist from "./components/Albumslist/Albumslist";
 
 
 function App() {

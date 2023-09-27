@@ -1,0 +1,21 @@
+.albumListMain{
+    padding: 0 1rem;
+    display: flex;
+    justify-content:space-between;
+}
+
+.albumListMain h2{
+    font-size: 2.5rem;
+}
+
+.albumListMain button{
+    outline: none;
+    padding: .5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgba(66, 17, 159, 0.84);
+    background-color: #bccaf6;
+
+    border-radius: .2rem;
+    border: 3px solid rgba(66, 17, 159, 0.84);
+}
