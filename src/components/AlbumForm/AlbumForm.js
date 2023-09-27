@@ -3,7 +3,7 @@ import './albumform.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function AlbumForm( ) {
+function AlbumForm( {onAlbumCreate} ) {
     const [albumName, setAlbumName] = useState('');
 
     const handleInputChange = (e) => {
@@ -12,11 +12,11 @@ function AlbumForm( ) {
     }
 
     const handleCreateAlbum = () => {
-        if(albumName.trim() === ``){
+        if(albumName.trim() === ''){
             toast.error('Please enter an album name');
         }else{
+            onAlbumCreate(albumName);
             toast.success('Album created successfully');
-            console.log('input');
             setAlbumName('');
         }
     }
@@ -38,8 +38,8 @@ function AlbumForm( ) {
                             onChange={handleInputChange}
                             autoFocus 
                     />
-                    <button className="clear formInputs" onClick={handleClear}>Clear</button>
-                    <button className="create formInputs" onClick={handleCreateAlbum}>Create</button>
+                    <button type="button" className="clear formInputs" onClick={handleClear}>Clear</button>
+                    <button type="button" className="create formInputs" onClick={handleCreateAlbum}>Create</button>
                 </form>
             </div>
         </div>
