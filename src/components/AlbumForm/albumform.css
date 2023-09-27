@@ -1,0 +1,64 @@
+.flex{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.albumForm{
+    text-align: center;
+    width: 100vw;
+    /* border: 2px solid red; */
+}
+.albumForm .form{
+    height: 16vh;
+    width: 40vw;
+    margin: 2rem 0;
+    padding: .5rem;
+    border-radius: 1rem;
+    border: 2px solid rgb(228 219 245);
+    box-shadow: 0px 0px 5px 2px rgb(228 219 245);
+    background-color: rgb(228 216 253);
+}
+
+.albumForm .inputBox{
+    width: 100%;
+    margin: 1rem 0;
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: space-evenly;
+}
+ .formInputs{
+    font-size: 1rem;
+    padding: .5rem;
+    outline: none;
+    border: none;
+ } 
+
+.inputBox input{
+    width: 50%;
+    border-radius: 1rem;
+}
+
+.inputBox button{
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    border-radius: .3rem;
+}
+
+button.clear{
+    background-color: red;
+}
+
+button.clear:hover{
+    background-color: rgb(210, 2, 2);
+}
+
+button.create{
+    background-image: linear-gradient(to bottom right, rgba(140, 60, 162, 0.84), rgb(80, 88, 210));
+}
+
+button.create:hover{
+    background-image: linear-gradient(to bottom right, rgba(60, 11, 74, 0.84), rgb(52, 60, 175));
+}
