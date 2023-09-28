@@ -10,10 +10,21 @@ function Albumslist(){
     const [albums, setAlbums] = useState([]);
     const [albumName, setAlbumName] = useState('');
     const [selectedAlbumId, setSelectedAlbumId] = useState(null);
-
+    const [buttonStyles, setButtonStyles] = useState({
+        backgroundColor: '#bccaf6',
+        borderColor: 'rgba(66, 17, 159, 0.84)',
+        color: 'rgba(66, 17, 159, 0.84)',
+      });
+      
      // Toggle the visibility of the album creation form
     const handleAddAlbum = () => {
         setShowForm((prevShowForm) => !prevShowForm);
+        setButtonStyles((prevStyles) => ({
+            ...prevStyles,
+            backgroundColor: prevStyles.backgroundColor === 'rgb(246, 188, 188)' ? '#bccaf6' : 'rgb(246, 188, 188)',
+            borderColor: prevStyles.borderColor === 'rgba(249, 18, 18, 0.93)' ? 'rgba(66, 17, 159, 0.84)' : 'rgba(249, 18, 18, 0.93)',
+            color: prevStyles.color === 'rgba(249, 18, 18, 0.93)' ? 'rgba(66, 17, 159, 0.84)' : 'rgba(249, 18, 18, 0.93)',
+          }));
         console.log('setShowform');
     };
 
@@ -49,7 +60,9 @@ function Albumslist(){
         {!selectedAlbumId && ( 
             <div className="albumListMain">
                 <h2>Your Album</h2>
-                <button onClick={handleAddAlbum}>
+                <button onClick={handleAddAlbum}
+                        style={buttonStyles}
+                >
                     {showForm ? 'Cancel' : 'Add Album'}
                 </button>
             </div>

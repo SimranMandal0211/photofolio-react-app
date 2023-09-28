@@ -16,8 +16,21 @@ export default function Imageslist( {albumId, onBackClick} ){
     const [images, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
  
+    const [buttonStyles, setButtonStyles] = useState({
+        backgroundColor: '#bccaf6',
+        borderColor: 'rgba(66, 17, 159, 0.84)',
+        color: 'rgba(66, 17, 159, 0.84)',
+    });
+
     const handleToggleForm = () => {
         setShowForm(!showForm);
+
+        setButtonStyles((prevStyles) => ({
+            ...prevStyles,
+            backgroundColor: prevStyles.backgroundColor === 'rgb(246, 188, 188)' ? '#bccaf6' : 'rgb(246, 188, 188)',
+            borderColor: prevStyles.borderColor === 'rgba(249, 18, 18, 0.93)' ? 'rgba(66, 17, 159, 0.84)' : 'rgba(249, 18, 18, 0.93)',
+            color: prevStyles.color === 'rgba(249, 18, 18, 0.93)' ? 'rgba(66, 17, 159, 0.84)' : 'rgba(249, 18, 18, 0.93)',
+          }));
     }
 
     const handleAddImage = () => {
@@ -123,7 +136,10 @@ export default function Imageslist( {albumId, onBackClick} ){
                     />
 
                     <h1>{images.length === 0 ? `No images in Album` : `Images in Album`}</h1>
-                    <button className="addingImg" onClick={handleToggleForm}>{showForm ? 'Cancel' : 'Add Image'}</button>
+                    <button className="addingImg" 
+                        onClick={handleToggleForm}
+                        style={buttonStyles}
+                    >{showForm ? 'Cancel' : 'Add Image'}</button>
                 </div>
 
                 <div className="images-list-box">
