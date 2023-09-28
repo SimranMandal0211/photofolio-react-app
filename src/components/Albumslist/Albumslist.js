@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import AlbumForm  from '../AlbumForm/AlbumForm';
+import Imageslist from "../Imageslist/Imageslist";
 import './albumslist.css';
 import GalleryIcon from '../../assets/images/photoGalleryIcon.jpg';
 
@@ -8,6 +9,7 @@ function Albumslist(){
     const [showForm, setShowForm] = useState(false);
     const [albums, setAlbums] = useState([]);
     const [albumName, setAlbumName] = useState('');
+    const [selectedAlbumId, setSelectedAlbumId] = useState(null);
 
      // Toggle the visibility of the album creation form
     const handleAddAlbum = () => {
@@ -29,30 +31,44 @@ function Albumslist(){
     }, [albums]);
 
 
+    // when an album is clicked
+    const handleAlbumClick = (albumId) => {
+        setSelectedAlbumId(albumId);
+        setShowForm(false);
+    }
+
     return (
     <>
         {showForm && <AlbumForm onAlbumCreate={handleAlbumCreate} />}
     
-        <div className="albumListMain">
-            <h2>Your Album</h2>
-            <button onClick={handleAddAlbum}>
-                {showForm ? 'Cancel' : 'Add Album'}
-            </button>
-        </div>
+        {!selectedAlbumId && ( 
+            <div className="albumListMain">
+                <h2>Your Album</h2>
+                <button onClick={handleAddAlbum}>
+                    {showForm ? 'Cancel' : 'Add Album'}
+                </button>
+            </div>
+        )}
 
-        <ul className="albumList">
-            {albums.map((album) => (
-                <li className="albumBox"
-                    key={album.id}    
-                >
-                    <div className="imgBox">
-                        <img src={GalleryIcon} alt="album" />
-                    </div>
-                    <span>{album.name}</span>
-                </li>
-            ))}
-        </ul>
+        {!selectedAlbumId && albums.length > 0 && (
+            <ul className="albumList">
+                {albums.map((album) => (
+                    <li className="albumBox"
+                        key={album.id}
+                        onClick={() => handleAlbumClick(album.id)}    
+                    >
+                        <div className="imgBox">
+                            <img src={GalleryIcon} alt="album" />
+                        </div>
+                        <span>{album.name}</span>
+                    </li>
+                ))}
+            </ul>
+        )}
 
+        {selectedAlbumId && (
+            <Imageslist />
+        )}
         
     </>
     );
