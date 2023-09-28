@@ -44,10 +44,10 @@
 
 /* top-box */
 .top-box{
-    width: 90vw;
+    width: 95vw;
     display: flex;
     align-items: center;
-    justify-content:space-around;
+    justify-content:space-between;
     height: 4rem;
 }
 
