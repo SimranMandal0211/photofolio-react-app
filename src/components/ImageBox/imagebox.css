@@ -1,0 +1,38 @@
+.img-box{
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    background-color: rgba(102, 101, 101, 0.676); 
+    backdrop-filter: blur(1px); 
+    
+}
+
+.img-box img{
+    position: relative;
+    z-index: 2;
+    width: 70%;
+    height: 70%;
+}
+.close-btn-box{
+    border: 2px solid green;
+    border-radius: 50%;
+    padding: .5rem;
+    background-color: #8b8b8b;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+img.close-btn{
+    width: 1.2rem;
+    height: 1.2rem;
+    
+}

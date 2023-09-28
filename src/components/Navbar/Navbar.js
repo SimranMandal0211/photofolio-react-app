@@ -7,8 +7,10 @@ function Navbar(){
     return (
         <>
             <nav className="header">
-                <img src= {photoIcon} alt="photo"/>
-                <span>PhotoFolio</span>
+                <a href='/'>
+                    <img src= {photoIcon} alt="photo"/>
+                    <span>PhotoFolio</span>
+                </a>
             </nav>
         </>
     )

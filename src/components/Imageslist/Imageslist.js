@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import editIcon from '../../assets/images/editIcon.jpg';
 import deleteIcon from '../../assets/images/deleteIcon.jpg';
 import './imagelist.css';
+import Imagebox from "../ImageBox/Imagebox";
 
 export default function Imageslist( {albumId, onBackClick} ){
     const [title, setTitle] = useState('');
@@ -13,6 +14,7 @@ export default function Imageslist( {albumId, onBackClick} ){
     const [showForm, setShowForm] = useState(false);
     const [editImageId, setEditImageId] = useState(null);
     const [images, setImages] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null);
  
     const handleToggleForm = () => {
         setShowForm(!showForm);
@@ -63,6 +65,7 @@ export default function Imageslist( {albumId, onBackClick} ){
         setImageUrl(image.imageUrl);
         setEditImageId(image.id);
         setShowForm(true);
+        setSelectedImage(image);
     }
 
     const handleDeleteImage = (imageId) => {
@@ -78,17 +81,6 @@ export default function Imageslist( {albumId, onBackClick} ){
     return (
         <>
             <div className="img-page">
-                <div className="top-box">
-                    <img alt="back"
-                        className="back"
-                        src="https://cdn-icons-png.flaticon.com/128/2099/2099238.png"
-                        onClick={onBackClick}
-                    />
-
-                    <h1>Images in Album</h1>
-                    <button className="addingImg" onClick={handleToggleForm}>{showForm ? 'Cancel' : 'Add Image'}</button>
-                </div>
-
 
                 {showForm && (
                     <div className="img-list-form">
@@ -123,6 +115,16 @@ export default function Imageslist( {albumId, onBackClick} ){
                     </div>
                 )}
 
+                <div className="top-box">
+                    <img alt="back"
+                        className="back"
+                        src="https://cdn-icons-png.flaticon.com/128/2099/2099238.png"
+                        onClick={onBackClick}
+                    />
+
+                    <h1>{images.length === 0 ? `No images in Album` : `Images in Album`}</h1>
+                    <button className="addingImg" onClick={handleToggleForm}>{showForm ? 'Cancel' : 'Add Image'}</button>
+                </div>
 
                 <div className="images-list-box">
                     {images.map((image, index) =>  (
@@ -151,6 +153,7 @@ export default function Imageslist( {albumId, onBackClick} ){
                                 <img src={image.imageUrl}
                                     alt=""
                                     className="url-image"
+                                    onClick={() => setSelectedImage(image)}
                                 />
                                 <h1>{image.title}</h1>
                             </div>
@@ -159,6 +162,11 @@ export default function Imageslist( {albumId, onBackClick} ){
 
                 </div>
 
+                {selectedImage && (
+                    <Imagebox imageUrl={selectedImage.imageUrl}
+                        onClose={() => setSelectedImage(null)}
+                    />
+                )}
             </div>
             <ToastContainer />
         </>
