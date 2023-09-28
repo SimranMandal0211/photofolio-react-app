@@ -37,6 +37,11 @@ function Albumslist(){
         setShowForm(false);
     }
 
+    // when the back button is clicked
+    const handleBackClick = () => {
+        setSelectedAlbumId(null);
+    }
+
     return (
     <>
         {showForm && <AlbumForm onAlbumCreate={handleAlbumCreate} />}
@@ -67,7 +72,7 @@ function Albumslist(){
         )}
 
         {selectedAlbumId && (
-            <Imageslist />
+            <Imageslist albumId={selectedAlbumId} onBackClick={handleBackClick} />
         )}
         
     </>
