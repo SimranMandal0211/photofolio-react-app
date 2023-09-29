@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import editIcon from '../../assets/images/editIcon.jpg';
-import deleteIcon from '../../assets/images/deleteIcon.png';
 import searchIcon from '../../assets/images/searchIcon.jpg';
 import crossBtn from '../../assets/images/crossBtn.jpg';
 
 import './imagelist.css';
 import Imagebox from "../ImageBox/Imagebox";
+import Images from "../Images/Images";
 
 // import firebase methods here
 import { collection, addDoc, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
@@ -241,44 +240,18 @@ export default function Imageslist( {albumId, onBackClick} ){
                 </div>
 
                 <div className="images-list-box">
-                    {/* {images.map((image, index) =>  ( */}
-                    {isSearchActive && filteredImages.length === 0 ? (
-                        <p>No matching images found</p>
-                    ): (
-                        filteredImages.map((image, index) => (
-                            <div className="img-card"
-                            key={index}    
-                        >
-                            <div className="edit-delete-icon">
-                                <div>
-                                    <img alt="edit"
-                                        className="edit"
-                                        src={editIcon}
-                                        onClick={() => handleEditImage(image)}
-                                    />
-                                </div>
-                                        
-                                <div>
-                                    <img alt="delete"
-                                        className="delete"
-                                        src={deleteIcon}
-                                        onClick={() => handleDeleteImage(image.id)}
-                                    />
-                                </div>
-                            </div>
-                            
-                            <img src={image.imageUrl}
-                                alt=""
-                                className="url-image"
-                                onClick={() => setSelectedImage(image)}
-                            />
-                            <h1>{image.title}</h1>
-                        </div>
-                            )
-                        )
-                    )}     
-                    {/* ))} */}
-
+                    {isSearchVisible || searchInput === '' ? (
+                        <Images images = {images}
+                                handleEditImage = {handleEditImage}
+                                handleDeleteImage = {handleDeleteImage}
+                                setSelectedImage = {setSelectedImage} />
+                    ) : (
+                        <Images images = {filteredImages}
+                                handleEditImage = {handleEditImage}
+                                handleDeleteImage = {handleDeleteImage}
+                                setSelectedImage = {setSelectedImage}
+                         />
+                    )}
                 </div>
 
                 {selectedImage && (
