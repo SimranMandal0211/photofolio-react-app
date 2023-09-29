@@ -8,7 +8,7 @@ function Navbar(){
         <>
             <nav className="header">
                 <a href='/'>
-                    <img src= {photoIcon} alt="photo"/>
+                    <img src= {photoIcon} alt="" />
                     <span>PhotoFolio</span>
                 </a>
             </nav>

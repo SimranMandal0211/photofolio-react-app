@@ -80,6 +80,8 @@
 
 .images-list-box{
     width: 90vw;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .images-list{

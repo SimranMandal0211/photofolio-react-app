@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,6 +7,10 @@ import editIcon from '../../assets/images/editIcon.jpg';
 import deleteIcon from '../../assets/images/deleteIcon.jpg';
 import './imagelist.css';
 import Imagebox from "../ImageBox/Imagebox";
+
+// import firebase methods here
+import { collection, addDoc, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebaseInit";
 
 export default function Imageslist( {albumId, onBackClick} ){
     const [title, setTitle] = useState('');
@@ -33,35 +37,45 @@ export default function Imageslist( {albumId, onBackClick} ){
           }));
     }
 
-    const handleAddImage = () => {
+    const handleAddImage = async() => {
         try{
-            if(editImageId !== null){
-                const updatedImages = images.map((image) => {
-                    if(image.id === editImageId){
-                        return {
-                            id: editImageId,
-                            albumId,
-                            title,
-                            imageUrl
-                        }
-                    }
-                    return image;
-                });
-                setImages(updatedImages);
+            // if(editImageId !== null){
+            //     const updatedImages = images.map((image) => {
+            //         if(image.id === editImageId){
+            //             return {
+            //                 id: editImageId,
+            //                 albumId,
+            //                 title,
+            //                 imageUrl
+            //             }
+            //         }
+            //         return image;
+            //     });
+            //     setImages(updatedImages);
 
-                console.log('updatedImages', images);
-                console.log('updatedImages', updatedImages);
+            //     console.log('updatedImages', images);
+            //     console.log('updatedImages', updatedImages);
+            //     toast.success('Image update succesfully!');
+            // }
+            if(editImageId){
+                await setDoc(doc(db, 'images', editImageId), {
+                    albumId,
+                    title,
+                    imageUrl,
+                });
                 toast.success('Image update succesfully!');
-            }else{
+            }
+            else{
                 const newImage = {
-                    id: Date.now(),
+                    // id: Date.now(),
                     albumId,
                     title,
                     imageUrl,
                 };
-                setImages([...images, newImage]);
-    
-                console.log('updatedImages', images);
+                await addDoc(collection(db, 'images'), newImage);
+                // setImages([...images, newImage]);
+                // console.log('updatedImages', images);
+
                 toast.success('Image added succesfully!');
             }
 
@@ -81,15 +95,32 @@ export default function Imageslist( {albumId, onBackClick} ){
         setSelectedImage(image);
     }
 
-    const handleDeleteImage = (imageId) => {
+    const handleDeleteImage = async (imageId) => {
         try{
-            const updatedImages = images.filter((image) => image.id !== imageId);
-            setImages(updatedImages);
+            await deleteDoc(doc(db, 'images', imageId));
+            // const updatedImages = images.filter((image) => image.id !== imageId);
+            // setImages(updatedImages);
             toast.success('Image deleted successfully!');
         }catch(err){
             console.error('Error deleting image: ', err);
         }
     }
+
+    useEffect(() => {
+        const unsub = onSnapshot(collection(db, 'images'), (snapShot) => {
+            const imagesData = snapShot.docs
+                .filter((doc) => doc.data().albumId === albumId)
+                .map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+            }));
+            setImages(imagesData);
+        });
+        return () => {
+            unsub();
+        };
+    }, [albumId]);
+
 
     return (
         <>

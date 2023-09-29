@@ -7,7 +7,7 @@ import GalleryIcon from '../../assets/images/photoGalleryIcon.jpg';
 
 
 // import firebase methods here
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../../firebaseInit";
 
 function Albumslist(){
@@ -33,18 +33,46 @@ function Albumslist(){
         console.log('setShowform');
     };
 
-    // Create a new album
-    const handleAlbumCreate = (name) => {
-        console.log('name:' , name);
+    // fetchAlbum data from databse
+    const fetchAlbums = async () => {
+        const snapShot = await getDocs(collection(db, 'albums'));
+        const albumsData = [];
+        snapShot.forEach((doc) => {
+            albumsData.push({ id: doc.id, name: doc.data().name });
+        });
+        setAlbums(albumsData);
+    }
 
-        const newAlbum = { id: Date.now(), name: name };
-        setAlbumName(name);
-        setAlbums([...albums, newAlbum]);
+    // Create a new album
+    const handleAlbumCreate = async (name) => {
+        console.log('name:' , name);
+        // const newAlbum = { id: Date.now(), name: name };
+        // setAlbums([...albums, newAlbum]);
+        // setAlbumName(name);
+        try{
+            const newAlbumRef = await addDoc(collection(db, 'albums'),{
+                name: name,
+            });
+
+            const newAlbumData = {
+                id: newAlbumRef.id,
+                name: name,
+            }
+
+            setAlbumName(name);
+            setAlbums([...albums, newAlbumData]);
+
+            fetchAlbums();
+            console.log('creating album try', newAlbumData);
+        }catch(err){
+            console.error('Error creating album', err);
+        }
     }
 
     useEffect(() => {
         console.log('albums', albums);
-    }, [albums]);
+        fetchAlbums();
+    }, []);
 
 
     // when an album is clicked
