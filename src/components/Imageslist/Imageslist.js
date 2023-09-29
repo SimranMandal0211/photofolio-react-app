@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import editIcon from '../../assets/images/editIcon.jpg';
-import deleteIcon from '../../assets/images/deleteIcon.jpg';
+import deleteIcon from '../../assets/images/deleteIcon.png';
 import './imagelist.css';
 import Imagebox from "../ImageBox/Imagebox";
 
@@ -25,6 +25,20 @@ export default function Imageslist( {albumId, onBackClick} ){
         borderColor: 'rgba(66, 17, 159, 0.84)',
         color: 'rgba(66, 17, 159, 0.84)',
     });
+
+    const [currentIndex, setCurrentIndex] = useState(0); // Track current image index
+
+    const prevImage = (prevIndex) => {
+        if (prevIndex >= 0) {
+          setCurrentIndex(prevIndex);
+        }
+    };
+      
+      const nextImage = (nextIndex) => {
+        if (nextIndex < images.length) {
+          setCurrentIndex(nextIndex);
+        }
+    };
 
     const handleToggleForm = () => {
         setShowForm(!showForm);
@@ -175,36 +189,35 @@ export default function Imageslist( {albumId, onBackClick} ){
 
                 <div className="images-list-box">
                     {images.map((image, index) =>  (
-                        <div className="images-list">
-                            <div className="img-card"
-                                key={image.id}    
-                            >
-                                <div className="edit-delete-icon">
-                                    <div>
-                                        <img alt="edit"
-                                            className="edit"
-                                            src={editIcon}
-                                            onClick={() => handleEditImage(image)}
-                                        />
-                                    </div>
-                                            
-                                    <div>
-                                        <img alt="delete"
-                                            className="delete"
-                                            src={deleteIcon}
-                                            onClick={() => handleDeleteImage(image.id)}
-                                        />
-                                    </div>
+                        <div className="img-card"
+                            key={index}    
+                        >
+                            <div className="edit-delete-icon">
+                                <div>
+                                    <img alt="edit"
+                                        className="edit"
+                                        src={editIcon}
+                                        onClick={() => handleEditImage(image)}
+                                    />
                                 </div>
-                                
-                                <img src={image.imageUrl}
-                                    alt=""
-                                    className="url-image"
-                                    onClick={() => setSelectedImage(image)}
-                                />
-                                <h1>{image.title}</h1>
+                                        
+                                <div>
+                                    <img alt="delete"
+                                        className="delete"
+                                        src={deleteIcon}
+                                        onClick={() => handleDeleteImage(image.id)}
+                                    />
+                                </div>
                             </div>
+                            
+                            <img src={image.imageUrl}
+                                alt=""
+                                className="url-image"
+                                onClick={() => setSelectedImage(image)}
+                            />
+                            <h1>{image.title}</h1>
                         </div>
+                        
                     ))}
 
                 </div>
@@ -212,6 +225,11 @@ export default function Imageslist( {albumId, onBackClick} ){
                 {selectedImage && (
                     <Imagebox imageUrl={selectedImage.imageUrl}
                         onClose={() => setSelectedImage(null)}
+                        onNext = {nextImage}
+                        onPrev = {prevImage}
+                        currentIndex = {currentIndex}
+                        totalImages = {images.length}
+                        images = {images}
                     />
                 )}
             </div>

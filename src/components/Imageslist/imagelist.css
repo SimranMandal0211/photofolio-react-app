@@ -84,15 +84,12 @@
     flex-wrap: wrap;
 }
 
-.images-list{
-    padding: 0 1rem;
-    margin: 1rem 0;
-}
 
 .img-card{
     box-shadow: 0px 0px 5px 2px rgb(208, 184, 255);
     width: 25vw;
     padding: 1rem;
+    margin: 1rem;
     position: relative;
     cursor: pointer;
 }
