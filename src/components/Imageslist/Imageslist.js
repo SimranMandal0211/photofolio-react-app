@@ -5,6 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import editIcon from '../../assets/images/editIcon.jpg';
 import deleteIcon from '../../assets/images/deleteIcon.png';
+import searchIcon from '../../assets/images/searchIcon.jpg';
+import crossBtn from '../../assets/images/crossBtn.jpg';
+
 import './imagelist.css';
 import Imagebox from "../ImageBox/Imagebox";
 
@@ -26,6 +29,12 @@ export default function Imageslist( {albumId, onBackClick} ){
         color: 'rgba(66, 17, 159, 0.84)',
     });
 
+    const [isSearchVisible, setSearchVisible] = useState(true); //Track  current seach visiblity]
+    const [isSearchInputVisible, setSearchInputVisible] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+    const [isSearchActive, setSearchActive] = useState(false);
+    const [filteredImages, setFilteredImages] = useState(images);
+
     const [currentIndex, setCurrentIndex] = useState(0); // Track current image index
 
     const prevImage = (prevIndex) => {
@@ -39,6 +48,33 @@ export default function Imageslist( {albumId, onBackClick} ){
           setCurrentIndex(nextIndex);
         }
     };
+
+    // toggle search
+    const toggleImgAndSearchInput = () => {
+        setSearchVisible(!isSearchVisible);
+        setSearchInputVisible(!isSearchInputVisible);
+
+        if(!isSearchInputVisible){
+            setSearchInput('');
+            setFilteredImages(images);
+            setSearchActive(false);
+        }
+    }
+
+    // handle search
+    const handleSearchInput = (e) => {
+        const searchText = e.target.value;
+        setSearchInput(searchText);
+
+        // filter images based on the input
+        const filtered = images.filter((image) => image.title.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+        setFilteredImages(filtered);
+
+        // update search status
+        setSearchActive(!!searchText);
+    }
 
     const handleToggleForm = () => {
         setShowForm(!showForm);
@@ -181,6 +217,23 @@ export default function Imageslist( {albumId, onBackClick} ){
                     />
 
                     <h1>{images.length === 0 ? `No images in Album` : `Images in Album`}</h1>
+
+                    <div className="search-box">
+                        {isSearchInputVisible && (
+                                <input type="text"
+                                className="search-input"
+                                placeholder="Search..."
+                                autoFocus
+                                value={searchInput}
+                                onChange={handleSearchInput}
+                            />
+                        )}
+                        <img src={isSearchVisible ? searchIcon : crossBtn  }
+                            alt={isSearchVisible ? 'search' : 'cut' }
+                            onClick={toggleImgAndSearchInput}
+                        />
+                    </div>
+
                     <button className="addingImg" 
                         onClick={handleToggleForm}
                         style={buttonStyles}
@@ -188,8 +241,12 @@ export default function Imageslist( {albumId, onBackClick} ){
                 </div>
 
                 <div className="images-list-box">
-                    {images.map((image, index) =>  (
-                        <div className="img-card"
+                    {/* {images.map((image, index) =>  ( */}
+                    {isSearchActive && filteredImages.length === 0 ? (
+                        <p>No matching images found</p>
+                    ): (
+                        filteredImages.map((image, index) => (
+                            <div className="img-card"
                             key={index}    
                         >
                             <div className="edit-delete-icon">
@@ -217,8 +274,10 @@ export default function Imageslist( {albumId, onBackClick} ){
                             />
                             <h1>{image.title}</h1>
                         </div>
-                        
-                    ))}
+                            )
+                        )
+                    )}     
+                    {/* ))} */}
 
                 </div>
 
