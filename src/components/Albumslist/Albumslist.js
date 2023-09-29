@@ -5,6 +5,11 @@ import Imageslist from "../Imageslist/Imageslist";
 import './albumslist.css';
 import GalleryIcon from '../../assets/images/photoGalleryIcon.jpg';
 
+
+// import firebase methods here
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebaseInit";
+
 function Albumslist(){
     const [showForm, setShowForm] = useState(false);
     const [albums, setAlbums] = useState([]);
@@ -15,7 +20,7 @@ function Albumslist(){
         borderColor: 'rgba(66, 17, 159, 0.84)',
         color: 'rgba(66, 17, 159, 0.84)',
       });
-      
+
      // Toggle the visibility of the album creation form
     const handleAddAlbum = () => {
         setShowForm((prevShowForm) => !prevShowForm);
