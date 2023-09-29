@@ -54,8 +54,18 @@
     position: relative;
 }
 
+.top-box > span {
+    background-color: rgb(228 212 228);
+    box-shadow: -10px -1px 8px 4px rgb(127 47 161);
+    border: 2px solid #e12fe1;
+    padding: 0.2rem;
+}
+
 .top-box h1{
     font-size: 2.5rem;
+    background-image: linear-gradient(to bottom right, rgb(11, 17, 60), rgba(204, 22, 255, 0.84));
+    background-clip: text;
+    color: transparent;
 }
 
 .top-box img.back{

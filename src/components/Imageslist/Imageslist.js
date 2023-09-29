@@ -216,7 +216,7 @@ export default function Imageslist( {albumId, onBackClick} ){
                         onClick={onBackClick}
                     />
 
-                    <h1>{images.length === 0 ? `No images in Album` : `Images in Album`}</h1>
+                    <span><h1>{images.length === 0 ? `No images in Album` : `Images in Album`}</h1></span>
 
                     <div className="search-box">
                         {isSearchInputVisible && (

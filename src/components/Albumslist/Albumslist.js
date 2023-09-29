@@ -92,7 +92,7 @@ function Albumslist(){
     
         {!selectedAlbumId && ( 
             <div className="albumListMain">
-                <h2>Your Album</h2>
+                <span><h2>Your Album</h2></span>
                 <button onClick={handleAddAlbum}
                         style={buttonStyles}
                 >
