@@ -7,6 +7,10 @@
     cursor: pointer;
 }
 
+.img-card:hover{
+   box-shadow: 0px 0px 10px 2px rgb(169 147 211);
+}
+
 .img-card .edit-delete-icon{
     display: flex;
     flex-direction: row;
@@ -37,6 +41,13 @@
 
 .img-card h1{
     text-align: center;
+    background-image: linear-gradient(to bottom right, rgb(11, 17, 60), rgba(204, 22, 255, 0.84));
+    /* -webkit-background-clip: text; */
+    background-clip: text;
+    color: transparent;
+}
+.img-card:hover h1{
+    background-image: linear-gradient(to bottom right, rgb(9 15 55), rgb(159 7 202 / 84%));
 }
 
 img.url-image{

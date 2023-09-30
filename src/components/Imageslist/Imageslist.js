@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,69 +14,132 @@ import Images from "../Images/Images";
 import { collection, addDoc, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseInit";
 
+const initialState = {
+    image: {
+        title: '',
+        imageUrl: '',
+        showForm: false,
+        editImageId: null,
+        images:[],
+        filteredImages:[], // state.image.images,
+    },
+    search: {
+        isSearchVisible: true,
+        isSearchInputVisible: false,
+        searchInput: '',
+        currentIndex: 0,
+    },
+};
+
+function imageReducer(state, action){
+    switch(action.type){
+        case 'SET_TITLE':
+            return { ...state, title: action.payload };
+        case 'SET_IMAGE_URL': 
+            return { ...state, imageUrl: action.payload };
+        case 'SET_SHOW_FORM':
+            return { ...state, showForm: action.payload };
+        case 'SET_EDIT_IMAGE_ID':
+            return { ...state, editImageId: action.payload };
+        case 'SET_IMAGES':
+            return { ...state, images: action.payload };
+        case 'SET_FILTERED_IMAGES':
+            return { ...state, filteredImages: action.payload };
+        default: return state;
+    }
+}
+
+function searchReducer(state, action){
+    switch(action.type){
+        case 'SET_SEARCH_VISIBLE':
+            return { ...state, isSearchVisible: action.payload };
+        case 'SET_SEARCH_INPUT_VISIBLE': 
+            return { ...state, isSearchInputVisible: action.payload };
+        case 'SET_SEARCH_INPUT':
+            return { ...state, searchInput: action.payload };
+        case 'SET_SEARCH_ACTIVE':
+            return { ...state, isSearchActive: action.payload };
+        case 'SET_CURRENT_INDEX':
+            return { ...state, currentIndex: action.payload };
+        default: return state;
+    }
+}
+
 export default function Imageslist( {albumId, onBackClick} ){
-    const [title, setTitle] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [showForm, setShowForm] = useState(false);
-    const [editImageId, setEditImageId] = useState(null);
-    const [images, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
- 
     const [buttonStyles, setButtonStyles] = useState({
         backgroundColor: '#bccaf6',
         borderColor: 'rgba(66, 17, 159, 0.84)',
         color: 'rgba(66, 17, 159, 0.84)',
     });
 
-    const [isSearchVisible, setSearchVisible] = useState(true); //Track  current seach visiblity]
-    const [isSearchInputVisible, setSearchInputVisible] = useState(false);
-    const [searchInput, setSearchInput] = useState('');
-    const [isSearchActive, setSearchActive] = useState(false);
-    const [filteredImages, setFilteredImages] = useState(images);
+    const [imageState, dispatchImage] = useReducer(imageReducer, initialState.image);
+    const [searchState, dispatchSearch] = useReducer(searchReducer, initialState.search);
+   
+    const { 
+        title,
+        imageUrl,
+        showForm,
+        editImageId,
+        images,
+        filteredImages,
+    } = imageState;
 
-    const [currentIndex, setCurrentIndex] = useState(0); // Track current image index
+    const {
+        isSearchVisible,
+        isSearchInputVisible,
+        searchInput,
+        currentIndex,
+    } = searchState;
+
 
     const prevImage = (prevIndex) => {
         if (prevIndex >= 0) {
-          setCurrentIndex(prevIndex);
+        //   setCurrentIndex(prevIndex);
+          dispatchSearch({ type: 'SET_CURRENT_INDEX', payload: prevIndex });
         }
     };
       
       const nextImage = (nextIndex) => {
         if (nextIndex < images.length) {
-          setCurrentIndex(nextIndex);
+        //   setCurrentIndex(nextIndex);
+          dispatchSearch({ type: 'SET_CURRENT_INDEX', payload: nextIndex });
         }
     };
 
     // toggle search
     const toggleImgAndSearchInput = () => {
-        setSearchVisible(!isSearchVisible);
-        setSearchInputVisible(!isSearchInputVisible);
+        // setSearchVisible(!isSearchVisible);
+        // setSearchInputVisible(!isSearchInputVisible);
+
+        dispatchSearch({ type: 'SET_SEARCH_VISIBLE', payload: !isSearchVisible });
+        dispatchSearch({ type: 'SET_SEARCH_INPUT_VISIBLE', payload: !isSearchInputVisible });
 
         if(!isSearchInputVisible){
-            setSearchInput('');
-            setFilteredImages(images);
-            setSearchActive(false);
+            // setSearchInput('');
+            // setFilteredImages(images);
+            dispatchSearch({ type: 'SET_SEARCH_INPUT', payload: '' });
+            dispatchImage({ type: 'SET_FILTERED_IMAGES', payload: images });
         }
     }
 
     // handle search
     const handleSearchInput = (e) => {
         const searchText = e.target.value;
-        setSearchInput(searchText);
+        // setSearchInput(searchText);
+        dispatchSearch({ type: 'SET_SEARCH_INPUT', payload: searchText });
 
         // filter images based on the input
         const filtered = images.filter((image) => image.title.toLowerCase().includes(searchText.toLowerCase())
         );
 
-        setFilteredImages(filtered);
-
-        // update search status
-        setSearchActive(!!searchText);
+        // setFilteredImages(filtered);
+        dispatchImage({ type: 'SET_FILTERED_IMAGES', payload: filtered });
     }
 
     const handleToggleForm = () => {
-        setShowForm(!showForm);
+        // setShowForm(!showForm);
+        dispatchImage({ type: 'SET_SHOW_FORM', payload: !showForm });
 
         setButtonStyles((prevStyles) => ({
             ...prevStyles,
@@ -106,6 +169,7 @@ export default function Imageslist( {albumId, onBackClick} ){
             //     console.log('updatedImages', updatedImages);
             //     toast.success('Image update succesfully!');
             // }
+
             if(editImageId){
                 await setDoc(doc(db, 'images', editImageId), {
                     albumId,
@@ -128,20 +192,28 @@ export default function Imageslist( {albumId, onBackClick} ){
                 toast.success('Image added succesfully!');
             }
 
-            setTitle('');
-            setImageUrl('');
-            setEditImageId(null);
+            // setTitle('');
+            // setImageUrl('');
+            // setEditImageId(null);
+            dispatchImage({ type: 'SET_TITLE', payload: '' });
+            dispatchImage({ type: 'SET_IMAGE_URL', payload: '' });
+            dispatchImage({ type: 'SET_EDIT_IMAGE_ID', payload: null });
         }catch(err){
             console.error('Error adding/updating image: ', err);
         }
     }
 
     const handleEditImage = (image) => {
-        setTitle(image.title);
-        setImageUrl(image.imageUrl);
-        setEditImageId(image.id);
-        setShowForm(true);
-        setSelectedImage(image);
+        // setTitle(image.title);
+        // setImageUrl(image.imageUrl);
+        // setEditImageId(image.id);
+        // setShowForm(true);
+
+        dispatchImage({ type: 'SET_TITLE', payload: image.title });
+        dispatchImage({ type: 'SET_IMAGE_URL', payload: image.imageUrl });
+        dispatchImage({ type: 'SET_EDIT_IMAGE_ID', payload: image.id });
+        dispatchImage({ type: 'SET_SHOW_FORM', payload: true });
+
     }
 
     const handleDeleteImage = async (imageId) => {
@@ -163,7 +235,8 @@ export default function Imageslist( {albumId, onBackClick} ){
                     id: doc.id,
                     ...doc.data(),
             }));
-            setImages(imagesData);
+            // setImages(imagesData);
+            dispatchImage({ type: 'SET_IMAGES', payload: imagesData });
         });
         return () => {
             unsub();
@@ -184,21 +257,30 @@ export default function Imageslist( {albumId, onBackClick} ){
                                 required
                                 autoFocus
                                 value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                onChange={(e) => 
+                                    // setTitle(e.target.value)
+                                    dispatchImage({ type: 'SET_TITLE', payload: e.target.value })
+                                }
                         />
                         <input type="text"
                                 className="imgUrl"
                                 placeholder="Image URL"
                                 value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
+                                onChange={(e) => 
+                                    // setImageUrl(e.target.value)
+                                    dispatchImage({ type: 'SET_IMAGE_URL', payload: e.target.value })
+                                }
 
                         />
                         <div className="btn-box-imgurl-form">
                             <button className="clear"
                                     onClick={() => {
-                                        setTitle('');
-                                        setImageUrl('');
-                                        setEditImageId(null);
+                                        // setTitle('');
+                                        // setImageUrl('');
+                                        // setEditImageId(null);
+                                        dispatchImage({ type: 'SET_TITLE', payload: '' });
+                                        dispatchImage({ type: 'SET_IMAGE_URL', payload: '' })
+                                        dispatchImage({ type: 'SET_EDIT_IMAGE_ID', payload: null })
                                     }}
                             >Clear</button>
                             <button className="create"
@@ -256,7 +338,10 @@ export default function Imageslist( {albumId, onBackClick} ){
 
                 {selectedImage && (
                     <Imagebox imageUrl={selectedImage.imageUrl}
-                        onClose={() => setSelectedImage(null)}
+                        onClose={() => 
+                            setSelectedImage(null)
+                            // dispatchImage({ type: 'SET_SELECTED_IMAGES', payload: null })
+                        }
                         onNext = {nextImage}
                         onPrev = {prevImage}
                         currentIndex = {currentIndex}
