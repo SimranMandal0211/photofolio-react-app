@@ -24,6 +24,7 @@ const initialState = {
     },
 };
 
+// reducer function
 function reducer(state, action){
     switch(action.type){
         case 'TOGGLE_FORM' :

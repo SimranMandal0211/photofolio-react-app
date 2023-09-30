@@ -14,6 +14,7 @@ import Images from "../Images/Images";
 import { collection, addDoc, doc, setDoc, deleteDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebaseInit";
 
+// define initial state 
 const initialState = {
     image: {
         title: '',
@@ -30,6 +31,8 @@ const initialState = {
         currentIndex: 0,
     },
 };
+
+// reducer functions for useReducer..
 
 function imageReducer(state, action){
     switch(action.type){
@@ -92,14 +95,15 @@ export default function Imageslist( {albumId, onBackClick} ){
         currentIndex,
     } = searchState;
 
-
+    // previous image click handle
     const prevImage = (prevIndex) => {
         if (prevIndex >= 0) {
         //   setCurrentIndex(prevIndex);
           dispatchSearch({ type: 'SET_CURRENT_INDEX', payload: prevIndex });
         }
     };
-      
+    
+    // next image click handle
       const nextImage = (nextIndex) => {
         if (nextIndex < images.length) {
         //   setCurrentIndex(nextIndex);
@@ -137,6 +141,7 @@ export default function Imageslist( {albumId, onBackClick} ){
         dispatchImage({ type: 'SET_FILTERED_IMAGES', payload: filtered });
     }
 
+    // handle toggle for image form
     const handleToggleForm = () => {
         // setShowForm(!showForm);
         dispatchImage({ type: 'SET_SHOW_FORM', payload: !showForm });
@@ -148,7 +153,8 @@ export default function Imageslist( {albumId, onBackClick} ){
             color: prevStyles.color === 'rgba(249, 18, 18, 0.93)' ? 'rgba(66, 17, 159, 0.84)' : 'rgba(249, 18, 18, 0.93)',
           }));
     }
-
+    
+    // add image
     const handleAddImage = async() => {
         try{
             // if(editImageId !== null){
@@ -203,6 +209,7 @@ export default function Imageslist( {albumId, onBackClick} ){
         }
     }
 
+    // edit image data name/url
     const handleEditImage = (image) => {
         // setTitle(image.title);
         // setImageUrl(image.imageUrl);
@@ -216,6 +223,7 @@ export default function Imageslist( {albumId, onBackClick} ){
 
     }
 
+    // delete image btn handle
     const handleDeleteImage = async (imageId) => {
         try{
             await deleteDoc(doc(db, 'images', imageId));

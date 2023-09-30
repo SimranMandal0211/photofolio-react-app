@@ -6,11 +6,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function AlbumForm( {onAlbumCreate} ) {
     const [albumName, setAlbumName] = useState('');
 
+// handle input change
     const handleInputChange = (e) => {
         setAlbumName(e.target.value);
         console.log('input', e.target.value);
     }
-
+// create album name
     const handleCreateAlbum = () => {
         if(albumName.trim() === ''){
             toast.error('Please enter an album name');
@@ -20,7 +21,7 @@ function AlbumForm( {onAlbumCreate} ) {
             setAlbumName('');
         }
     }
-
+// clear album name 
     const handleClear = () => {
         setAlbumName('');
     };
